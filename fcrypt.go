@@ -1,7 +1,13 @@
+// Author : Nemuel Wainaina
+/*
+	Encrypt and decrypt files from the command line
+*/
+
 package main
 
 import (
 	"crypto/aes"
+	"crypto/cipher"
 	"flag"
 	"fmt"
 	"math/rand"
@@ -27,7 +33,7 @@ func main() {
 	flag.BoolVar(&rand_key, "rand-key", false, "Generate and use a random key")
 	flag.Parse()
 
-	fmt.Println(enc)
+	fmt.Println(GenerateKey())
 }
 
 func print_help(f *os.File) {
@@ -42,6 +48,15 @@ func GenerateKey() []byte {
 		key[i] = pool[rand.Intn(len(pool))]
 	}
 	return key
+}
+
+func AESEncrypt(file string, key []byte, output string) {
+	c, _ := aes.NewCipher(key)
+	gcm, _ := cipher.NewGCM(c)
+	nonce := make([]byte, gcm.NonceSize())
+	plaintext, _ := os.ReadFile(file)
+	result := gcm.Seal(nonce, nonce, plaintext, nil)
+	os.WriteFile(file, result, 0666)
 }
 
 func Encrypt(algorithm string, key string, content []byte) {
