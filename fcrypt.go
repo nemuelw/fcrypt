@@ -1,9 +1,12 @@
 package main
 
 import (
+	"crypto/aes"
 	"flag"
 	"fmt"
+	"math/rand"
 	"os"
+	"time"
 )
 
 var (
@@ -29,6 +32,16 @@ func main() {
 
 func print_help(f *os.File) {
 	fmt.Fprintf(f, "Usage:\n")
+}
+
+func GenerateKey() []byte {
+	key := make([]byte, 32)
+	pool := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	for i := range key {
+		rand.Seed(time.Now().UnixNano())
+		key[i] = pool[rand.Intn(len(pool))]
+	}
+	return key
 }
 
 func Encrypt(algorithm string, key string, content []byte) {
