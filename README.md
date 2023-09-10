@@ -1,6 +1,6 @@
 # fcrypt
 
-Encrypt and decrypt files and directories on the fly
+Encrypt and decrypt files and directories on the command line
 
 ## Usage
 
