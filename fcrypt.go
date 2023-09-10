@@ -1,6 +1,6 @@
 // Author : Nemuel Wainaina
 /*
-	Encrypt and decrypt files from the command line
+	Encrypt and decrypt files from the command line (AES)
 */
 
 package main
