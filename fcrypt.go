@@ -13,13 +13,14 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
+	"path/filepath"
 	"time"
 )
 
 var (
 	help bool // display the help menu
 	enc, dec string // file/directory to either encrypt or decrypt
-	target string
+	target string; target_is_dir bool
 	recur bool // recursive option for directories
 	key string // the key to use
 	rand_key bool // option to generate and use a random key
@@ -62,22 +63,30 @@ func main() {
 		os.Exit(1)
 	}
 
-	// down to work ...
+	// the actual encryption or decryption
 	if enc != "" {
 		// encryption
-		if is_file(target) {
-			// just a single file
-			encrypt_file(target, []byte(key), output)
+		if target_is_dir {
+			for _, file := range list_files(target) {
+				encrypt_file(file, []byte(key), output)
+			}
 		} else {
-			// it is a directory
-			
+			encrypt_file(target, []byte(key), output)
+		}
+	} else {
+		// decryption
+		if target_is_dir {
+			for _, file := range list_files(target) {
+				decrypt_file(file, []byte(key), output)
+			}
+		} else {
+			decrypt_file(target, []byte(key), output)
 		}
 	}
-	
 }
 
 func print_help(f *os.File) {
-	fmt.Fprintf(f, "Usage:\n")
+	fmt.Fprintf(f, "Usage: %s -e/-d tgt_file_or_dir [-r] -k key / --rand-key\n", os.Args[0])
 }
 
 // generate a random key for encryption (or decryption :) ?)
@@ -91,23 +100,26 @@ func generate_key() []byte {
 	return key
 }
 
-// check whether file is actually a file or a directory
-func is_file(file string) bool {
-	return true
-}
-
 // check whether the provided file exists
 func file_exists(file string) bool {
-	if _, err := os.Stat(file); err != nil {
+	if info, err := os.Stat(file); err != nil {
 		return false
+	} else {
+		target_is_dir = info.IsDir()
+		return true
 	}
-	return true
 }
 
 // encrypt the file using the key and save to 'output'
 func encrypt_file(file string, key []byte, output string) {
 	plaintext, _ := os.ReadFile(file)
 	result := aes_encrypt(plaintext, key)
+	os.WriteFile(output, result, 0666)
+}
+
+func decrypt_file(file string, key []byte, output string) {
+	ciphertext, _ := os.ReadFile(file)
+	result, _ := aes_decrypt(ciphertext, key)
 	os.WriteFile(output, result, 0666)
 }
 
@@ -148,5 +160,12 @@ func aes_decrypt(ciphertext []byte, key []byte) ([]byte, error) {
 
 // return a list of files in provided path
 func list_files(path string) []string {
-
+	var files []string
+	filepath.Walk(path, func(p string, info os.FileInfo, err error) error {
+		if !info.IsDir() {
+			files = append(files, p)
+		}
+		return nil
+	})
+	return files
 }
