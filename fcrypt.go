@@ -19,7 +19,7 @@ var (
 	help bool // display the help menu
 	enc, dec string // file/directory to encrypt/decrypt
 	recur bool // recursive option for directories
-	algo, key string // the algorithm and key to use
+	key string // the key to use
 	rand_key bool // option to generate and use a random key
 )
 
@@ -28,19 +28,20 @@ func main() {
 	flag.StringVar(&enc, "e", "", "File or directory to encrypt")
 	flag.StringVar(&dec, "d", "", "File or directory to decrypt")
 	flag.BoolVar(&recur, "r", false, "Recursive option for a directory")
-	flag.StringVar(&algo, "a", "", "Algorithm to use")
 	flag.StringVar(&key, "k", "", "Encryption or decryption key")
 	flag.BoolVar(&rand_key, "rand-key", false, "Generate and use a random key")
 	flag.Parse()
 
-	fmt.Println(GenerateKey())
+	if(enc != "") {
+		
+	}
 }
 
 func print_help(f *os.File) {
 	fmt.Fprintf(f, "Usage:\n")
 }
 
-func GenerateKey() []byte {
+func generate_key() []byte {
 	key := make([]byte, 32)
 	pool := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 	for i := range key {
@@ -50,19 +51,27 @@ func GenerateKey() []byte {
 	return key
 }
 
-func AESEncrypt(file string, key []byte, output string) {
+func file_exists(file string) bool {
+	if _, err := os.Stat(file); err != nil {
+		return false
+	}
+	return true
+}
+
+func encrypt_file(file string, key []byte, output string) {
+	plaintext, _ := os.ReadFile(file)
+	result := aes_encrypt(plaintext, key)
+	os.WriteFile(output, result, 0666)
+}
+
+func aes_encrypt(plaintext []byte, key []byte) []byte {
 	c, _ := aes.NewCipher(key)
 	gcm, _ := cipher.NewGCM(c)
 	nonce := make([]byte, gcm.NonceSize())
-	plaintext, _ := os.ReadFile(file)
 	result := gcm.Seal(nonce, nonce, plaintext, nil)
-	os.WriteFile(file, result, 0666)
+	return result
 }
 
-func Encrypt(algorithm string, key string, content []byte) {
-
-}
-
-func EncryptFile(file string) {
-	
+func aes_decrypt(ciphertext []byte, key string) []byte {
+	return []byte("asdf")
 }
