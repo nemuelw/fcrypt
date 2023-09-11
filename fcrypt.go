@@ -8,6 +8,7 @@ package main
 import (
 	"crypto/aes"
 	"crypto/cipher"
+	"errors"
 	"flag"
 	"fmt"
 	"math/rand"
@@ -17,10 +18,12 @@ import (
 
 var (
 	help bool // display the help menu
-	enc, dec string // file/directory to encrypt/decrypt
+	enc, dec string // file/directory to either encrypt or decrypt
+	target string
 	recur bool // recursive option for directories
 	key string // the key to use
 	rand_key bool // option to generate and use a random key
+	output string
 )
 
 func main() {
@@ -32,15 +35,52 @@ func main() {
 	flag.BoolVar(&rand_key, "rand-key", false, "Generate and use a random key")
 	flag.Parse()
 
-	if(enc != "") {
-		
+	// sanity checks
+	if (enc != "") && (dec != "") {
+		fmt.Println("Error: You cannot provide both the -e and -d flags")
+		os.Exit(1)
+	} else if (enc == "") && (dec == "") {
+		fmt.Println("Error: You must provide either the -e or -d flag")
+		os.Exit(1)
 	}
+	if enc != "" {target = enc} else {target = dec}
+	if !file_exists(target) {
+		fmt.Printf("Error: %s not found\n", target)
+		os.Exit(1)
+	}
+	if key != "" && rand_key {
+		fmt.Println("Error: You cannot provide both the -k and --rand-key flags")
+		os.Exit(1)
+	} else if key == "" && !rand_key {
+		fmt.Println("Error: You must either specify a key(-k) or provide the --rand-key flag")
+		os.Exit(1)
+	}
+	if rand_key {
+		key = string(generate_key())
+	} else if len(key) != 32 {
+		fmt.Println("Error: Key must be 32 characters long")
+		os.Exit(1)
+	}
+
+	// down to work ...
+	if enc != "" {
+		// encryption
+		if is_file(target) {
+			// just a single file
+			encrypt_file(target, []byte(key), output)
+		} else {
+			// it is a directory
+			
+		}
+	}
+	
 }
 
 func print_help(f *os.File) {
 	fmt.Fprintf(f, "Usage:\n")
 }
 
+// generate a random key for encryption (or decryption :) ?)
 func generate_key() []byte {
 	key := make([]byte, 32)
 	pool := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
@@ -51,6 +91,12 @@ func generate_key() []byte {
 	return key
 }
 
+// check whether file is actually a file or a directory
+func is_file(file string) bool {
+	return true
+}
+
+// check whether the provided file exists
 func file_exists(file string) bool {
 	if _, err := os.Stat(file); err != nil {
 		return false
@@ -58,12 +104,14 @@ func file_exists(file string) bool {
 	return true
 }
 
+// encrypt the file using the key and save to 'output'
 func encrypt_file(file string, key []byte, output string) {
 	plaintext, _ := os.ReadFile(file)
 	result := aes_encrypt(plaintext, key)
 	os.WriteFile(output, result, 0666)
 }
 
+// encrypt the plaintext using the key
 func aes_encrypt(plaintext []byte, key []byte) []byte {
 	c, _ := aes.NewCipher(key)
 	gcm, _ := cipher.NewGCM(c)
@@ -72,6 +120,33 @@ func aes_encrypt(plaintext []byte, key []byte) []byte {
 	return result
 }
 
-func aes_decrypt(ciphertext []byte, key string) []byte {
-	return []byte("asdf")
+// decrypt the cipher using the key
+func aes_decrypt(ciphertext []byte, key []byte) ([]byte, error) {
+    c, err := aes.NewCipher(key)
+    if err != nil {
+        return nil, err
+    }
+
+    gcm, err := cipher.NewGCM(c)
+    if err != nil {
+        return nil, err
+    }
+
+    nonceSize := gcm.NonceSize()
+    if len(ciphertext) < nonceSize {
+        return nil, errors.New("ciphertext is too short")
+    }
+
+    nonce, ciphertext := ciphertext[:nonceSize], ciphertext[nonceSize:]
+    plaintext, err := gcm.Open(nil, nonce, ciphertext, nil)
+    if err != nil {
+        return nil, err
+    }
+
+    return plaintext, nil
+}
+
+// return a list of files in provided path
+func list_files(path string) []string {
+
 }
