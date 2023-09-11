@@ -6,10 +6,10 @@ Encrypt and decrypt files and directories on the command line
 
 ### Encrypt and decrypt files
 
-fcrypt -e test.txt -k asdfghjkldncassdfghjklkjhfgdhsyt
-fcrypt -d test.enc -k asdfghjkldncassdfghjklkjhfgdhsyt
+fcrypt -e test.txt -k asdfghjkldncassdfghjklkjhfgdhsyt -o test.enc \
+fcrypt -d test.enc -k asdfghjkldncassdfghjklkjhfgdhsyt -o test.txt \
 
 ### Encrypt and decrypt directories
 
-fcrypt -e Documents/ -r -k asdfghjkldncassdfghjklkjhfgdhsyt
+fcrypt -e Documents/ -r -k asdfghjkldncassdfghjklkjhfgdhsyt \
 fcrypt -d Documents/ -r -k asdfghjkldncassdfghjklkjhfgdhsyt
