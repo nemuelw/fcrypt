@@ -7,7 +7,7 @@ Encrypt and decrypt files and directories on the command line
 ### Encrypt and decrypt files
 
 fcrypt -e test.txt -k asdfghjkldncassdfghjklkjhfgdhsyt
-fcrypt -d test.txt.fcrypt -k asdfghjkldncassdfghjklkjhfgdhsyt
+fcrypt -d test.enc -k asdfghjkldncassdfghjklkjhfgdhsyt
 
 ### Encrypt and decrypt directories
 
