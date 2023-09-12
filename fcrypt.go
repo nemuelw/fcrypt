@@ -9,7 +9,6 @@ package main
 import (
 	"crypto/aes"
 	"crypto/cipher"
-	"errors"
 	"flag"
 	"fmt"
 	"math/rand"
@@ -47,6 +46,7 @@ func main() {
 		return
 	} else if (enc == "") && (dec == "") {
 		fmt.Println("Error: You must provide either the -e or -d flag")
+		print_help()
 		return
 	}
 	if enc != "" {target = enc} else {target = dec}
@@ -73,11 +73,10 @@ func main() {
 		// encryption
 		if target_is_dir {
 			for _, file := range list_files(target) {
-				fmt.Println(file)
-				encrypt_file(file, []byte(key), )
+				encrypt_file(file, []byte(key))
 			}
 		} else {
-			encrypt_file(target, []byte(key), )
+			encrypt_file(target, []byte(key))
 		}
 	} else {
 		// decryption
@@ -128,16 +127,14 @@ func file_exists(file string) bool {
 // encrypt the file using the key
 func encrypt_file(file string, key []byte) {
 	plaintext, _ := os.ReadFile(file)
-	fmt.Println(string(plaintext))
 	result := aes_encrypt(plaintext, key)
-	fmt.Println(string(result))
 	os.WriteFile(file, result, 0666)
 }
 
 // decrypt the file using the key
 func decrypt_file(file string, key []byte) {
 	ciphertext, _ := os.ReadFile(file)
-	result, _ := aes_decrypt(ciphertext, key)
+	result := aes_decrypt(ciphertext, key)
 	os.WriteFile(file, result, 0666)
 }
 
@@ -151,29 +148,13 @@ func aes_encrypt(plaintext []byte, key []byte) []byte {
 }
 
 // decrypt the cipher using the key
-func aes_decrypt(ciphertext []byte, key []byte) ([]byte, error) {
-    c, err := aes.NewCipher(key)
-    if err != nil {
-        return nil, err
-    }
-
-    gcm, err := cipher.NewGCM(c)
-    if err != nil {
-        return nil, err
-    }
-
+func aes_decrypt(ciphertext []byte, key []byte) []byte {
+    c, _ := aes.NewCipher(key)
+    gcm, _ := cipher.NewGCM(c)
     nonceSize := gcm.NonceSize()
-    if len(ciphertext) < nonceSize {
-        return nil, errors.New("ciphertext is too short")
-    }
-
-    nonce, ciphertext := ciphertext[:nonceSize], ciphertext[nonceSize:]
-    plaintext, err := gcm.Open(nil, nonce, ciphertext, nil)
-    if err != nil {
-        return nil, err
-    }
-
-    return plaintext, nil
+    nonce, cipher := ciphertext[:nonceSize], ciphertext[nonceSize:]
+    plaintext, _ := gcm.Open(nil, nonce, cipher, nil)
+    return plaintext
 }
 
 // return a list of files in provided path

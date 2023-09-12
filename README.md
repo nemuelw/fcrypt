@@ -8,12 +8,15 @@ sudo apt-get install fcrypt
 
 ## Usage
 
-### Encrypt and decrypt files
+### Encryption
 
-fcrypt -e test.txt -k asdfghjkldncassdfghjklkjhfgdhsyt -o test.enc \
-fcrypt -d test.enc -k asdfghjkldncassdfghjklkjhfgdhsyt -o test.txt \
-
-### Encrypt and decrypt directories
-
+fcrypt -e test.txt -k asdfghjkldncassdfghjklkjhfgdhsyt \
 fcrypt -e Documents/ -k asdfghjkldncassdfghjklkjhfgdhsyt \
+
+Use a randomly generated key: \
+fcrypt -e Documents/ --rand-key
+
+### Decryption
+
+fcrypt -d test.enc -k asdfghjkldncassdfghjklkjhfgdhsyt \
 fcrypt -d Documents/ -k asdfghjkldncassdfghjklkjhfgdhsyt
