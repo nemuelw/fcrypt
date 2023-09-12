@@ -5,7 +5,7 @@ using the Advanced Encryption Standard (256-bit)
 
 ## Installation
 
-
+Visit the (releases)[https://github.com/nemzyxt/fcrypt/releases]
 
 ## Usage
 
