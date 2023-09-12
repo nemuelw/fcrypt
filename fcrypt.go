@@ -22,7 +22,6 @@ var (
 	enc, dec      string // file/directory to either encrypt or decrypt
 	target        string // file/directory to operate on (copied from either enc or dec)
 	target_is_dir bool   // whether or not target is a directory
-	recur         bool   // recursive option for directories
 	key           string // the key to use
 	rand_key      bool   // option to generate and use a random key
 )
@@ -31,7 +30,6 @@ func main() {
 	flag.BoolVar(&help, "h", false, "Print the help menu")
 	flag.StringVar(&enc, "e", "", "File or directory to encrypt")
 	flag.StringVar(&dec, "d", "", "File or directory to decrypt")
-	flag.BoolVar(&recur, "r", false, "Recursive option for a directory")
 	flag.StringVar(&key, "k", "", "Encryption or decryption key")
 	flag.BoolVar(&rand_key, "rand-key", false, "Generate and use a random key")
 	flag.Parse()
