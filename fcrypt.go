@@ -108,7 +108,7 @@ func main() {
 func print_help() {
 	fmt.Printf("\t\t\tfcrypt %s\n", VERSION_NUMBER)
 	fmt.Print("\tEncrypt and decrypt files and directories using AES256\n")
-	fmt.Print("\tAuthor: Nemuel Wainaina\t\tEmail: nemzyxt@gmail.com\n\n")
+	fmt.Print("\t\t   Author: Nemuel Wainaina\n\n")
 	fmt.Print("Usage: fcrypt -e/-d tgt_file_or_dir -k key / [--rand-key]\n\n")
 	fmt.Print("ENCRYPTION:\n")
 	fmt.Print("\t-e tgt_file_or_dir: File or directory to encrypt, REQUIRED\n")
