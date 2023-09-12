@@ -8,6 +8,14 @@ sudo apt-get install fcrypt
 
 ## Usage
 
+### Help
+
+fcrypt -h
+
+### Get version
+
+fcrypt -v
+
 ### Encryption
 
 fcrypt -e test.txt -k asdfghjkldncassdfghjklkjhfgdhsyt \
