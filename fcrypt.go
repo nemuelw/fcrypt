@@ -20,8 +20,8 @@ import (
 var (
 	help          bool   // display the help menu
 	enc, dec      string // file/directory to either encrypt or decrypt
-	target        string
-	target_is_dir bool
+	target        string // file/directory to operate on (copied from either enc or dec)
+	target_is_dir bool   // whether or not target is a directory
 	recur         bool   // recursive option for directories
 	key           string // the key to use
 	rand_key      bool   // option to generate and use a random key
