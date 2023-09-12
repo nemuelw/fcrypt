@@ -68,6 +68,7 @@ func main() {
 		// encryption
 		if target_is_dir {
 			for _, file := range list_files(target) {
+				fmt.Println(file)
 				encrypt_file(file, []byte(key), output)
 			}
 		} else {
@@ -97,6 +98,7 @@ func generate_key() []byte {
 		rand.Seed(time.Now().UnixNano())
 		key[i] = pool[rand.Intn(len(pool))]
 	}
+	fmt.Printf("rand_key: %s\n", key)
 	return key
 }
 
@@ -110,16 +112,25 @@ func file_exists(file string) bool {
 	}
 }
 
+func fcrypt_shine() {
+	
+}
+
 // encrypt the file using the key and save to 'output'
 func encrypt_file(file string, key []byte, output string) {
 	plaintext, _ := os.ReadFile(file)
+	fmt.Println(string(plaintext))
 	result := aes_encrypt(plaintext, key)
+	fmt.Println(string(result))
+	if output == "" {output = file}
 	os.WriteFile(output, result, 0666)
 }
 
+// decrypt the file using the key and save it to output
 func decrypt_file(file string, key []byte, output string) {
 	ciphertext, _ := os.ReadFile(file)
 	result, _ := aes_decrypt(ciphertext, key)
+	if output == "" {output = file}
 	os.WriteFile(output, result, 0666)
 }
 
