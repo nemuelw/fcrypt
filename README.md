@@ -11,7 +11,7 @@ sudo apt-get install fcrypt
 ### Encryption
 
 fcrypt -e test.txt -k asdfghjkldncassdfghjklkjhfgdhsyt \
-fcrypt -e Documents/ -k asdfghjkldncassdfghjklkjhfgdhsyt \
+fcrypt -e Documents/ -k asdfghjkldncassdfghjklkjhfgdhsyt
 
 Use a randomly generated key: \
 fcrypt -e Documents/ --rand-key
