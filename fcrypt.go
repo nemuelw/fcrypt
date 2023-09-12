@@ -23,7 +23,7 @@ const (
 
 var (
 	help          bool   // display the help menu
-	version		  bool   // display the version number
+	version       bool   // display the version number
 	enc, dec      string // file/directory to either encrypt or decrypt
 	target        string // file/directory to operate on (copied from either enc or dec)
 	target_is_dir bool   // whether or not target is a directory
