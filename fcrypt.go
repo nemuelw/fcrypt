@@ -36,6 +36,9 @@ func main() {
 	flag.BoolVar(&rand_key, "rand-key", false, "Generate and use a random key")
 	flag.Parse()
 
+	print_help()
+	return
+
 	// sanity checks
 	if (enc != "") && (dec != "") {
 		fmt.Println("Error: You cannot provide both the -e and -d flags")
@@ -89,12 +92,12 @@ func main() {
 func print_help() {
 	fmt.Printf("Usage: %s -e/-d tgt_file_or_dir -k key / --rand-key\n", os.Args[0])
 	fmt.Printf("ENCRYPTION:\n")
-	fmt.Printf("\t-e tgt_file_or_dir: File or directory to encrypt, REQUIRED")
-	fmt.Printf("\t-k encryption_key: The encryption key to use, REQUIRED IF NO --rand-key")
-	fmt.Printf("\t--rand-key: Generate and use a random key, REQUIRED IF NO -k flag")
+	fmt.Printf("\t-e tgt_file_or_dir: File or directory to encrypt, REQUIRED\n")
+	fmt.Printf("\t-k encryption_key: The encryption key to use, REQUIRED IF NO --rand-key\n")
+	fmt.Printf("\t--rand-key: Generate and use a random key, REQUIRED IF NO -k flag\n")
 	fmt.Printf("DECRYPTION:\n")
-	fmt.Printf("\t-d tgt_file_or_dir: File or directory to decrypt, REQUIRED")
-	fmt.Printf("\t-k decryption_key: The decryption key to use, REQUIRED")
+	fmt.Printf("\t-d tgt_file_or_dir: File or directory to decrypt, REQUIRED\n")
+	fmt.Printf("\t-k decryption_key: The decryption key to use, REQUIRED\n")
 }
 
 // generate a random key for encryption (or decryption :) ?)
