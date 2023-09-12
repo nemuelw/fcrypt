@@ -5,7 +5,7 @@ using the Advanced Encryption Standard (256-bit)
 
 ## Installation
 
-sudo apt-get install fcrypt
+
 
 ## Usage
 
