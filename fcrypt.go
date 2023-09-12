@@ -24,7 +24,6 @@ var (
 	recur bool // recursive option for directories
 	key string // the key to use
 	rand_key bool // option to generate and use a random key
-	output string
 )
 
 func main() {
@@ -36,28 +35,30 @@ func main() {
 	flag.BoolVar(&rand_key, "rand-key", false, "Generate and use a random key")
 	flag.Parse()
 
-	print_help()
-	return
-
 	// sanity checks
+	if help {
+		print_help()
+		return
+	}
 	if (enc != "") && (dec != "") {
 		fmt.Println("Error: You cannot provide both the -e and -d flags")
-		os.Exit(1)
+		print_help()
+		return
 	} else if (enc == "") && (dec == "") {
 		fmt.Println("Error: You must provide either the -e or -d flag")
-		os.Exit(1)
+		return
 	}
 	if enc != "" {target = enc} else {target = dec}
 	if !file_exists(target) {
 		fmt.Printf("Error: %s not found\n", target)
-		os.Exit(1)
+		return
 	}
 	if key != "" && rand_key {
 		fmt.Println("Error: You cannot provide both the -k and --rand-key flags")
-		os.Exit(1)
+		return
 	} else if key == "" && !rand_key {
 		fmt.Println("Error: You must either specify a key(-k) or provide the --rand-key flag")
-		os.Exit(1)
+		return
 	}
 	if rand_key {
 		key = string(generate_key())
@@ -72,32 +73,33 @@ func main() {
 		if target_is_dir {
 			for _, file := range list_files(target) {
 				fmt.Println(file)
-				encrypt_file(file, []byte(key), output)
+				encrypt_file(file, []byte(key), )
 			}
 		} else {
-			encrypt_file(target, []byte(key), output)
+			encrypt_file(target, []byte(key), )
 		}
 	} else {
 		// decryption
 		if target_is_dir {
 			for _, file := range list_files(target) {
-				decrypt_file(file, []byte(key), output)
+				decrypt_file(file, []byte(key))
 			}
 		} else {
-			decrypt_file(target, []byte(key), output)
+			decrypt_file(target, []byte(key))
 		}
 	}
 }
 
 func print_help() {
-	fmt.Printf("Usage: %s -e/-d tgt_file_or_dir -k key / --rand-key\n", os.Args[0])
+	fmt.Print("\t\tfcrypt -> Encrypt and decrypt files and directories using AES256\n\n")
+	fmt.Print("Usage: fcrypt -e/-d tgt_file_or_dir -k key / [--rand-key]\n\n")
 	fmt.Printf("ENCRYPTION:\n")
 	fmt.Printf("\t-e tgt_file_or_dir: File or directory to encrypt, REQUIRED\n")
 	fmt.Printf("\t-k encryption_key: The encryption key to use, REQUIRED IF NO --rand-key\n")
-	fmt.Printf("\t--rand-key: Generate and use a random key, REQUIRED IF NO -k flag\n")
+	fmt.Printf("\t--rand-key: Generate and use a random key, REQUIRED IF NO -k flag\n\n")
 	fmt.Printf("DECRYPTION:\n")
 	fmt.Printf("\t-d tgt_file_or_dir: File or directory to decrypt, REQUIRED\n")
-	fmt.Printf("\t-k decryption_key: The decryption key to use, REQUIRED\n")
+	fmt.Printf("\t-k decryption_key: The decryption key to use, REQUIRED\n\n")
 }
 
 // generate a random key for encryption (or decryption :) ?)
@@ -122,22 +124,20 @@ func file_exists(file string) bool {
 	}
 }
 
-// encrypt the file using the key and save to 'output'
-func encrypt_file(file string, key []byte, output string) {
+// encrypt the file using the key
+func encrypt_file(file string, key []byte) {
 	plaintext, _ := os.ReadFile(file)
 	fmt.Println(string(plaintext))
 	result := aes_encrypt(plaintext, key)
 	fmt.Println(string(result))
-	if output == "" {output = file}
-	os.WriteFile(output, result, 0666)
+	os.WriteFile(file, result, 0666)
 }
 
-// decrypt the file using the key and save it to output
-func decrypt_file(file string, key []byte, output string) {
+// decrypt the file using the key
+func decrypt_file(file string, key []byte) {
 	ciphertext, _ := os.ReadFile(file)
 	result, _ := aes_decrypt(ciphertext, key)
-	if output == "" {output = file}
-	os.WriteFile(output, result, 0666)
+	os.WriteFile(file, result, 0666)
 }
 
 // encrypt the plaintext using the key
