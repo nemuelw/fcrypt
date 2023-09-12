@@ -17,8 +17,13 @@ import (
 	"time"
 )
 
+const (
+	VERSION_NUMBER = "1.0.0"
+)
+
 var (
 	help          bool   // display the help menu
+	version		  bool   // display the version number
 	enc, dec      string // file/directory to either encrypt or decrypt
 	target        string // file/directory to operate on (copied from either enc or dec)
 	target_is_dir bool   // whether or not target is a directory
@@ -28,6 +33,7 @@ var (
 
 func main() {
 	flag.BoolVar(&help, "h", false, "Print the help menu")
+	flag.BoolVar(&version, "v", false, "Print the version number")
 	flag.StringVar(&enc, "e", "", "File or directory to encrypt")
 	flag.StringVar(&dec, "d", "", "File or directory to decrypt")
 	flag.StringVar(&key, "k", "", "Encryption or decryption key")
@@ -37,6 +43,10 @@ func main() {
 	// sanity checks
 	if help {
 		print_help()
+		return
+	}
+	if version {
+		fmt.Println(VERSION_NUMBER)
 		return
 	}
 	if (enc != "") && (dec != "") {
@@ -96,15 +106,20 @@ func main() {
 }
 
 func print_help() {
-	fmt.Print("\t\tfcrypt -> Encrypt and decrypt files and directories using AES256\n\n")
+	fmt.Printf("\t\t\tfcrypt %s\n", VERSION_NUMBER)
+	fmt.Print("\tEncrypt and decrypt files and directories using AES256\n")
+	fmt.Print("\tAuthor: Nemuel Wainaina\t\tEmail: nemzyxt@gmail.com\n\n")
 	fmt.Print("Usage: fcrypt -e/-d tgt_file_or_dir -k key / [--rand-key]\n\n")
-	fmt.Printf("ENCRYPTION:\n")
-	fmt.Printf("\t-e tgt_file_or_dir: File or directory to encrypt, REQUIRED\n")
-	fmt.Printf("\t-k encryption_key: The encryption key to use, REQUIRED IF NO --rand-key\n")
-	fmt.Printf("\t--rand-key: Generate and use a random key, REQUIRED IF NO -k flag\n\n")
-	fmt.Printf("DECRYPTION:\n")
-	fmt.Printf("\t-d tgt_file_or_dir: File or directory to decrypt, REQUIRED\n")
-	fmt.Printf("\t-k decryption_key: The decryption key to use, REQUIRED\n\n")
+	fmt.Print("ENCRYPTION:\n")
+	fmt.Print("\t-e tgt_file_or_dir: File or directory to encrypt, REQUIRED\n")
+	fmt.Print("\t-k encryption_key: The encryption key to use, REQUIRED IF NO --rand-key\n")
+	fmt.Print("\t--rand-key: Generate and use a random key, REQUIRED IF NO -k flag\n\n")
+	fmt.Print("DECRYPTION:\n")
+	fmt.Print("\t-d tgt_file_or_dir: File or directory to decrypt, REQUIRED\n")
+	fmt.Print("\t-k decryption_key: The decryption key to use, REQUIRED\n\n")
+	fmt.Print("OTHERS:\n")
+	fmt.Print("\t-h: Print out this help message\n")
+	fmt.Print("\t-v: Print out the version number\n\n")
 }
 
 // generate a random key for encryption (or decryption :) ?)
