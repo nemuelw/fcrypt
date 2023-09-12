@@ -18,12 +18,13 @@ import (
 )
 
 var (
-	help bool // display the help menu
-	enc, dec string // file/directory to either encrypt or decrypt
-	target string; target_is_dir bool
-	recur bool // recursive option for directories
-	key string // the key to use
-	rand_key bool // option to generate and use a random key
+	help          bool   // display the help menu
+	enc, dec      string // file/directory to either encrypt or decrypt
+	target        string
+	target_is_dir bool
+	recur         bool   // recursive option for directories
+	key           string // the key to use
+	rand_key      bool   // option to generate and use a random key
 )
 
 func main() {
@@ -49,7 +50,11 @@ func main() {
 		print_help()
 		return
 	}
-	if enc != "" {target = enc} else {target = dec}
+	if enc != "" {
+		target = enc
+	} else {
+		target = dec
+	}
 	if !file_exists(target) {
 		fmt.Printf("Error: %s not found\n", target)
 		return
@@ -149,12 +154,12 @@ func aes_encrypt(plaintext []byte, key []byte) []byte {
 
 // decrypt the cipher using the key
 func aes_decrypt(ciphertext []byte, key []byte) []byte {
-    c, _ := aes.NewCipher(key)
-    gcm, _ := cipher.NewGCM(c)
-    nonceSize := gcm.NonceSize()
-    nonce, cipher := ciphertext[:nonceSize], ciphertext[nonceSize:]
-    plaintext, _ := gcm.Open(nil, nonce, cipher, nil)
-    return plaintext
+	c, _ := aes.NewCipher(key)
+	gcm, _ := cipher.NewGCM(c)
+	nonceSize := gcm.NonceSize()
+	nonce, cipher := ciphertext[:nonceSize], ciphertext[nonceSize:]
+	plaintext, _ := gcm.Open(nil, nonce, cipher, nil)
+	return plaintext
 }
 
 // return a list of files in provided path
