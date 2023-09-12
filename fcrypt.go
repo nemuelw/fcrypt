@@ -86,8 +86,15 @@ func main() {
 	}
 }
 
-func print_help(f *os.File) {
-	fmt.Fprintf(f, "Usage: %s -e/-d tgt_file_or_dir [-r] -k key / --rand-key\n", os.Args[0])
+func print_help() {
+	fmt.Printf("Usage: %s -e/-d tgt_file_or_dir -k key / --rand-key\n", os.Args[0])
+	fmt.Printf("ENCRYPTION:\n")
+	fmt.Printf("\t-e tgt_file_or_dir: File or directory to encrypt, REQUIRED")
+	fmt.Printf("\t-k encryption_key: The encryption key to use, REQUIRED IF NO --rand-key")
+	fmt.Printf("\t--rand-key: Generate and use a random key, REQUIRED IF NO -k flag")
+	fmt.Printf("DECRYPTION:\n")
+	fmt.Printf("\t-d tgt_file_or_dir: File or directory to decrypt, REQUIRED")
+	fmt.Printf("\t-k decryption_key: The decryption key to use, REQUIRED")
 }
 
 // generate a random key for encryption (or decryption :) ?)
@@ -110,10 +117,6 @@ func file_exists(file string) bool {
 		target_is_dir = info.IsDir()
 		return true
 	}
-}
-
-func fcrypt_shine() {
-	
 }
 
 // encrypt the file using the key and save to 'output'
