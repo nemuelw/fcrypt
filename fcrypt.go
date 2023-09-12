@@ -65,7 +65,7 @@ func main() {
 		key = string(generate_key())
 	} else if len(key) != 32 {
 		fmt.Println("Error: Key must be 32 characters long")
-		os.Exit(1)
+		return
 	}
 
 	// the actual encryption or decryption
