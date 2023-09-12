@@ -61,9 +61,11 @@ func main() {
 	}
 	if key != "" && rand_key {
 		fmt.Println("Error: You cannot provide both the -k and --rand-key flags")
+		print_help()
 		return
 	} else if key == "" && !rand_key {
 		fmt.Println("Error: You must either specify a key(-k) or provide the --rand-key flag")
+		print_help()
 		return
 	}
 	if rand_key {
