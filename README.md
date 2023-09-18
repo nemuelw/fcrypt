@@ -1,7 +1,6 @@
 # fcrypt
 
-Encrypt and decrypt files and directories on the command line \
-using the Advanced Encryption Standard (256-bit)
+Encrypt and decrypt files and directories on the command line using the Advanced Encryption Standard (256-bit)
 
 ## Installation
 
