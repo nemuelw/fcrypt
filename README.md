@@ -11,21 +11,38 @@ Visit the [releases](https://github.com/nemzyxt/fcrypt/releases) section
 
 ### Help
 
+```
 fcrypt -h
+```
 
 ### Get version
 
+```
 fcrypt -v
+```
 
 ### Encryption
 
-fcrypt -e test.txt -k asdfghjkldncassdfghjklkjhfgdhsyt \
-fcrypt -e Documents/ -k asdfghjkldncassdfghjklkjhfgdhsyt
+```
+fcrypt -e test.txt -k asdfghjkldncassdfghjklkjhfgdhsyt
+```
 
-Use a randomly generated key: \
+```
+fcrypt -e Documents/ -k asdfghjkldncassdfghjklkjhfgdhsyt
+```
+
+Use a randomly generated key: 
+
+```
 fcrypt -e Documents/ --rand-key
+```
 
 ### Decryption
 
-fcrypt -d test.enc -k asdfghjkldncassdfghjklkjhfgdhsyt \
+```
+fcrypt -d test.enc -k asdfghjkldncassdfghjklkjhfgdhsyt
+```
+
+```
 fcrypt -d Documents/ -k asdfghjkldncassdfghjklkjhfgdhsyt
+```
